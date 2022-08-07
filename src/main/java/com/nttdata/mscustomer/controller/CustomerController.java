@@ -39,7 +39,8 @@ public class CustomerController {
     public Mono<ResponseEntity<Customer>> create(@RequestBody Customer c){
                     return customerService.create(c)
                                     .map(savedCustomer -> new ResponseEntity<>(savedCustomer , HttpStatus.CREATED))
-                                    .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+                                    .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST))
+                            ;
     }
 
 //    @PutMapping("/update")
