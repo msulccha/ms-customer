@@ -36,10 +36,9 @@ public class CustomerServiceImpl  implements CustomerService {
     public Mono<Customer> update(Customer customer) {
 
         return customerRepository.findById(customer.getId())
-                .flatMap( customerExistente -> {
-                    return customerRepository.save(customer);
-                })
-                .switchIfEmpty( null);
+                .flatMap( customerExistente ->
+                    customerRepository.save(customer)
+                );
     }
 
     @Override
@@ -52,8 +51,4 @@ public class CustomerServiceImpl  implements CustomerService {
                 .defaultIfEmpty(Boolean.FALSE);
     }
 
-    @Override
-    public Mono<TypeCustomer> findTypeCustomer(String id) {
-        return null;
-    }
 }

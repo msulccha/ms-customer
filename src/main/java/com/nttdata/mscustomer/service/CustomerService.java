@@ -16,5 +16,4 @@ public interface CustomerService  {
 
     public Mono<Boolean> delete(String id);
 
-    public Mono<TypeCustomer> findTypeCustomer(String id);
 }

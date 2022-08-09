@@ -39,25 +39,29 @@ public class CustomerController {
     public Mono<ResponseEntity<Customer>> create(@RequestBody Customer c){
                     return customerService.create(c)
                                     .map(savedCustomer -> new ResponseEntity<>(savedCustomer , HttpStatus.CREATED))
-                                    .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST))
-                            ;
+                                    .defaultIfEmpty(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-//    @PutMapping("/update")
-//    public Mono<ResponseEntity<Customer>> update(@RequestBody Customer customer) {
-//        return customerService.findTypeCustomer(customer.getTypeCustomer().getId())
-//                .flatMap(typeCustomer -> {
-//                    return customerService.update(customer)
-//                            .map(savedCustomer -> new ResponseEntity<>(savedCustomer, HttpStatus.CREATED));
-//                })
-//                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    public Mono<ResponseEntity<String>> delete(@PathVariable String id) {
-//        return customerService.delete(id)
-//                .filter(deleteCustomer -> deleteCustomer)
-//                .map(deleteCustomer -> new ResponseEntity<>("Customer Deleted", HttpStatus.ACCEPTED))
-//                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
+    @PutMapping("/update") //flatMap = nos permite hacer la conversión de MonoCustomer a MonoEntityCustomer : se realiza por el tipo de dato
+    public Mono<ResponseEntity<Customer>> update(@RequestBody Customer customer) {
+                 return customerService.update(customer)
+                            .map(savedCustomer -> new ResponseEntity<>(savedCustomer, HttpStatus.CREATED))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Mono<ResponseEntity<String>> delete(@PathVariable String id) {
+        return customerService.delete(id)
+                .filter(deleteCustomer -> deleteCustomer)
+                .map(deleteCustomer -> new ResponseEntity<>("Customer Deleted", HttpStatus.ACCEPTED))
+                .defaultIfEmpty(new ResponseEntity<>("Customer Not Deleted", HttpStatus.NOT_FOUND));
+    }
 }
+
+
+
+
+
+
+
+
