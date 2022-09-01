@@ -2,6 +2,7 @@ package com.nttdata.mscustomer.controller;
 
 import com.nttdata.mscustomer.entity.Customer;
 import com.nttdata.mscustomer.service.CustomerService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class CustomerController {
     public Flux<Customer> list(){
         return customerService.findAll();
     }
-
+    @CircuitBreaker(name  = "customerListBk", fallbackMethod = "BackupFindById")
     @GetMapping("/find/{id}")
     public Mono<Customer> findById(@PathVariable String id){
         return customerService.findById(id);
@@ -56,6 +57,13 @@ public class CustomerController {
                 .map(deleteCustomer -> new ResponseEntity<>("Customer Deleted", HttpStatus.ACCEPTED))
                 .defaultIfEmpty(new ResponseEntity<>("Customer Not Deleted", HttpStatus.NOT_FOUND));
     }
+
+
+    public Mono<Customer> findById(@PathVariable String userid, RuntimeException e){
+        return customerService.findById(userid);
+    }
+
+
 }
 
 
